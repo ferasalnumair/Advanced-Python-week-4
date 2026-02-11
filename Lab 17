@@ -1,0 +1,21 @@
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
+df = pd.read_csv("data/day17_scaling.csv")
+num_cols = df.select_dtypes(include="number").columns
+minmax = MinMaxScaler()
+standard = StandardScaler()
+robust = RobustScaler()
+df_minmax = df.copy()
+df_standard = df.copy()
+df_robust = df.copy()
+df_minmax[num_cols] = minmax.fit_transform(df[num_cols])
+df_standard[num_cols] = standard.fit_transform(df[num_cols])
+df_robust[num_cols] = robust.fit_transform(df[num_cols])
+print("Original:")
+print(df[num_cols].describe())
+print("MinMax:")
+print(df_minmax[num_cols].describe())
+print("Standard:")
+print(df_standard[num_cols].describe())
+print("Robust:")
+print(df_robust[num_cols].describe())
