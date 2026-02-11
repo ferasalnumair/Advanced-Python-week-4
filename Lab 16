@@ -1,0 +1,9 @@
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+df = pd.read_csv("data/day16_encoding.csv")
+le = LabelEncoder()
+df["city_label"] = le.fit_transform(df["city"])
+city_onehot = pd.get_dummies(df["city"], prefix="city")
+df_onehot = pd.concat([df, city_onehot], axis=1)
+print(df.head())
+print(df_onehot.head())
