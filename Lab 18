@@ -1,0 +1,13 @@
+import pandas as pd
+df = pd.read_csv("data/day18_binning.csv")
+df["age_bin_equal"] = pd.cut(df["age"], bins=4)
+df["age_bin_freq"] = pd.qcut(df["age"], q=4)
+bins = [0, 18, 35, 60, 100]
+labels = ["child", "young", "adult", "senior"]
+df["age_bin_domain"] = pd.cut(df["age"], bins=bins, labels=labels)
+onehot = pd.get_dummies(df["age_bin_domain"], prefix="age_group")
+df = pd.concat([df, onehot], axis=1)
+print(df["age_bin_equal"].value_counts())
+print(df["age_bin_freq"].value_counts())
+print(df["age_bin_domain"].value_counts())
+print(df.head())
