@@ -1,0 +1,15 @@
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import PowerTransformer
+df = pd.read_csv("data/day19_transform.csv")
+col = df.select_dtypes(include=np.number).columns[0]
+before_stats = df[col].describe()
+df["log1p"] = np.log1p(df[col])
+df["sqrt"] = np.sqrt(df[col])
+pt = PowerTransformer(method="yeo-johnson")
+df["yeojohnson"] = pt.fit_transform(df[[col]])
+after_stats = df[["log1p", "sqrt", "yeojohnson"]].describe()
+print("Before:")
+print(before_stats)
+print("\nAfter:")
+print(after_stats)
