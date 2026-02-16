@@ -1,0 +1,24 @@
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+df = pd.read_csv("data/day20_integration.csv")
+num_cols = df.select_dtypes(include=np.number).columns
+cat_cols = df.select_dtypes(exclude=np.number).columns
+scaler = StandardScaler()
+df_scaled = pd.DataFrame(
+    scaler.fit_transform(df[num_cols]),
+    columns=num_cols
+)
+encoder = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
+encoded = encoder.fit_transform(df[cat_cols])
+encoded_cols = encoder.get_feature_names_out(cat_cols)
+df_encoded = pd.DataFrame(encoded, columns=encoded_cols)
+df_engineered = pd.concat([df_scaled, df_encoded], axis=1)
+if len(num_cols) >= 2:
+    df_engineered["interaction"] = (
+        df_scaled[num_cols[0]] * df_scaled[num_cols[1]]
+    )
+print("Baseline stats:")
+print(df[num_cols].describe())
+print("\nEngineered stats:")
+print(df_engineered.describe())
